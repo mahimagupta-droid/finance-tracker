@@ -24,6 +24,14 @@ const getBarColor = (percentage: number) => {
 }
 
 export default function CategoryBudgetList({ budgets }: Props) {
+    if (budgets.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center gap-2 rounded-md bg-card p-10 text-center min-h-full">
+                <p className="text-lg font-semibold text-textColor">No budgets created yet</p>
+                <p className="text-sm text-muted-foreground">Use the form to set your first monthly budget.</p>
+            </div>
+        );
+    }
     return (
         <div className="flex flex-col gap-4 w-full">
             {budgets.map((b) => {

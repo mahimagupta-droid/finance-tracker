@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
             return `${e.category}: ₹${e.total}`
         }).join(", ");
 
-        const systemPrompt = `You are a personal finance advisor for Indian users. Be direct and concise.The user is a ${persona}. Reference their actual rupee amounts. Never give generic advice. Respond ONLY in valid JSON: { "insights": [{ "type": string, "title": string, "description": string, "priority": string }] } Insight types: overspending | savings_tip | investment_suggestion | recurring_alert | goal_progress`;
+        const systemPrompt = `You are a personal finance advisor for Indian users. Be direct and concise. The user is a ${persona}. Reference their actual rupee amounts. Never give generic advice. Respond ONLY in valid JSON: { "insights": [{ "type": string, "title": string, "description": string, "priority": string }] } Insight types: overspending | savings_tip | investment_suggestion | recurring_alert | goal_progress`;
 
         const userPrompt = `Monthly data for ${persona} with goal ${primaryGoal}:
         Income: ₹${totalIncome} | Expenses: ₹${totalExpenses} | Savings this month: ₹${savings}
@@ -42,7 +42,8 @@ export async function GET(req: NextRequest) {
         Budget exceeded in: ${exceededText}
         Recurring expenses detected: ${recurringText}
         Spending spikes this month: ${spikesText}
-        Give me 3-5 priority-ranked financial insights.`;
+        Give me 3-5 priority-ranked financial insights.
+        Vary insight types across the response where the data genuinely supports it, using at most 2 insights of the same type. Do not invent an overspending, spike, or recurring_alert insight if the data above shows none — accuracy to the real numbers always takes priority over type variety.`;
 
         const { text } = await generateText({
             model: google("gemini-2.5-flash"),
@@ -56,6 +57,7 @@ export async function GET(req: NextRequest) {
             cleanedRes = cleanedRes.replace(/```json|```/g, "").trim();
         }
         const parsed = JSON.parse(cleanedRes)
+        console.log("Insight types received:", parsed.insights.map((i: any) => i.type));
         return NextResponse.json(parsed, { status: 200 })
     } catch (error) {
         console.error("Insights route error:", error);

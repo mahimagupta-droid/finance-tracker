@@ -8,7 +8,7 @@ import { useFinanceStore } from "@/lib/store/useFinanceStore";
 import { useEffect } from "react";
 
 export default function BudgetPage() {
-    const { transactions, budgets, loading, fetchTransactions, fetchBudgets } = useFinanceStore();
+    const { transactions, budgets, loading, fetchTransactions, fetchBudgets, budgetsError } = useFinanceStore();
 
     useEffect(() => {
         fetchTransactions();
@@ -52,26 +52,38 @@ export default function BudgetPage() {
             </div>
         )
     }
-    
+
     return (
         <main className="w-full">
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center mb-10">
                 <h1 className="text-[3rem] font-bold mb-3 mt-5">Budget Overview</h1>
                 <div className="grid md:grid-cols-3 gap-6 mt-6 w-3/4">
                     <SummaryCard title="Total Expenses" amount={totalExpenses} type="expense" />
                     <SummaryCard title="Remaining" amount={totalBudget - totalExpenses} type="balance" />
-                    {/* <SummaryCard title="Total Income" amount={totalBudget} type="income" /> */}
                     <SummaryCard title="Total Budget" amount={totalBudget} type="income" />
                 </div>
-                <div className="mt-8 w-3/4 grid grid-cols-3 gap-6">
-                    <div className="col-span-2">
-                        <CategoryBudgetList budgets={mappedBudgets} />
+                {budgetsError ? (
+                    <div className="mt-8 w-3/4 rounded-lg border border-border bg-card p-10 text-center">
+                        <p className="font-semibold text-textColor">Couldn't load your budgets</p>
+                        <p className="text-sm text-muted-textColor mt-1">{budgetsError}</p>
+                        <button
+                            onClick={() => fetchBudgets()}
+                            className="mt-4 rounded-lg border border-border bg-primary text-primary-textColor px-4 py-2 text-sm hover:bg-primary/85 transition"
+                        >
+                            Try again
+                        </button>
                     </div>
-                    <div className="flex flex-col items-center gap-4 col-span-1">
-                        <DonutChart budgets={mappedBudgets} />
-                        <CreateBudgetForm onSuccess={fetchBudgets} />
+                ) : (
+                    <div className="mt-8 w-3/4 grid grid-cols-3 gap-6 mt-10">
+                        <div className="col-span-2">
+                            <CategoryBudgetList budgets={mappedBudgets} />
+                        </div>
+                        <div className="flex flex-col items-center gap-4 col-span-1">
+                            <DonutChart budgets={mappedBudgets} />
+                            <CreateBudgetForm onSuccess={fetchBudgets} />
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </main >
     );

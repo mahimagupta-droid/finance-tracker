@@ -8,7 +8,7 @@ import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from "@/lib/constants";
 import { TransactionCard } from "@/components/TransactionCard";
 import { useFinanceStore } from "@/lib/store/useFinanceStore";
 export default function AddTransactionsPage() {
-  const { transactions: fetchedTransactions, loading, fetchTransactions } = useFinanceStore();
+  const { transactions: fetchedTransactions, loading, transactionsError, fetchTransactions } = useFinanceStore();
 
   const [transaction, setTransaction] = useState({
     amount: 0,
@@ -237,8 +237,25 @@ export default function AddTransactionsPage() {
             No transactions added yet!
           </div>
         )}
+
         {fetchedTransactions.length > 0 && (
           <div className="mb-14 mt-14 flex gap-6 flex-wrap w-full">
+            {transactionsError && !loading && (
+              <div className="mt-6 rounded-lg border border-border bg-card p-6 text-center">
+                <p className="font-semibold text-textColor">Couldn't load your transactions</p>
+                <p className="text-sm text-muted-textColor mt-1">{transactionsError}</p>
+                <button
+                  onClick={() => fetchTransactions()}
+                  className="mt-3 rounded-lg border border-border bg-primary text-primary-textColor px-4 py-2 text-sm hover:bg-primary/85 transition"
+                >
+                  Try again
+                </button>
+              </div>
+            )}
+
+            {!transactionsError && fetchedTransactions.length === 0 && !loading && (
+              <div>No transactions added yet!</div>
+            )}
             {fetchedTransactions.map((transactions) => (
               <TransactionCard
                 key={transactions.id}
@@ -259,6 +276,5 @@ export default function AddTransactionsPage() {
         )}
       </div>
     </div>
-
   );
 }

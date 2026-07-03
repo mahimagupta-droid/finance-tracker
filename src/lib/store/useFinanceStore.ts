@@ -32,12 +32,15 @@ interface FinanceStore {
     transactions: Transaction[];
     budgets: Budget[];
     loading: boolean;
+    transactionsError: string | null;
+    budgetsError: string | null;
     fetchTransactions: () => Promise<void>;
     fetchBudgets: () => Promise<void>;
 
     aiInsights: Insight[];
     insightsLoading: boolean;
     insightsFetched: boolean;
+    insightsError: string | null;
     fetchInsights: (force?: boolean) => Promise<void>;
 }
 
@@ -45,39 +48,67 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
     transactions: [],
     budgets: [],
     loading: true,
+    transactionsError: null,
+    budgetsError: null,
 
     aiInsights: [],
     insightsLoading: false,
     insightsFetched: false,
+    insightsError: null,
 
     fetchTransactions: async () => {
-        const response = await fetch("/api/transactions");
-        if (response.ok) {
+        set({ loading: true, transactionsError: null });
+        try {
+            const response = await fetch("/api/transactions");
+            if (!response.ok) {
+                throw new Error(`Failed to fetch transactions (${response.status})`);
+            }
             const data = await response.json();
             if (data.success && data.transactions) {
                 set({ transactions: data.transactions });
+            } else {
+                throw new Error("Unexpected response while fetching transactions.");
             }
+        } catch (error: any) {
+            set({ transactionsError: error.message });
+        } finally {
+            set({ loading: false });
         }
-        set({ loading: false });
     },
 
     fetchBudgets: async () => {
-        const response = await fetch("/api/budgets");
-        if (response.ok) {
+        set({ budgetsError: null });
+        try {
+            const response = await fetch("/api/budgets");
+            if (!response.ok) {
+                throw new Error(`Failed to fetch budgets (${response.status})`);
+            }
             const budgetsData = await response.json();
             set({ budgets: budgetsData });
+        } catch (error: any) {
+            set({ budgetsError: error.message });
         }
     },
 
     fetchInsights: async (force = false) => {
         const { insightsFetched } = get();
         if (insightsFetched && !force) return;
-        set({ insightsLoading: true });
-        const response = await fetch("/api/ai/insights");
-        if (response.ok) {
+        set({ insightsLoading: true, insightsError: null });
+        try {
+            const response = await fetch("/api/ai/insights");
+            if (!response.ok) {
+                const data = await response.json().catch(() => null);
+                throw new Error(data?.error || `Failed to fetch insights (${response.status})`);
+            }
             const data = await response.json();
-            set({ aiInsights: data.insights, insightsFetched: true });
+            set({ aiInsights: data.insights, insightsFetched: true, insightsError: null });
+        } catch (error: any) {
+            set({
+                insightsError: error.message,
+                insightsFetched: true,
+            });
+        } finally {
+            set({ insightsLoading: false });
         }
-        set({ insightsLoading: false });
     },
 }));
