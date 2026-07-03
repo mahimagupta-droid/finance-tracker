@@ -186,5 +186,6 @@ export async function buildFinancialSummary(userId: string) {
       spent: spent?.total ?? 0,
     }
   }).filter((b) => b.spent > b.limit);
+  console.log("income:", totalIncome, "expenses:", totalExpenses, "savings:", savings, "recurringExpenses:", recurringExpenses, "monthlyExpenses:", monthlyExpenses, "expenseSpikes:", expenseSpikes, "exceedingBudget:", exceedingBudget);
   return { persona, incomeRange, primaryGoal, totalIncome, totalExpenses, savings, recurringExpenses, monthlyExpenses, expenseSpikes, exceedingBudget };
 }

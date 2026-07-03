@@ -1,22 +1,21 @@
 import { buildFinancialSummary } from "@/lib/insights";
-import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
-import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
+import { auth } from "@clerk/nextjs/server";
+import { streamText, convertToModelMessages } from "ai";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
     try {
         const { userId } = await auth();
-        if (!userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
+        if (!userId) return NextResponse.json({
+            error: "unauthorized access",
+        }, { status: 401 })
         const result = await buildFinancialSummary(userId);
         if (typeof result === "string") return NextResponse.json(
             { error: result },
             { status: 400 }
         )
         const { persona, incomeRange, primaryGoal, totalIncome, totalExpenses, savings, recurringExpenses, monthlyExpenses, expenseSpikes, exceedingBudget } = result;
-
         const exceededText = exceedingBudget.length > 0 ?
             exceedingBudget.map((b) => {
                 return `${b.category} (spent ₹${b.spent}, limit: ₹${b.limit} )`
@@ -34,31 +33,29 @@ export async function GET(req: NextRequest) {
             return `${e.category}: ₹${e.total}`
         }).join(", ");
 
-        const systemPrompt = `You are a personal finance advisor for Indian users. Be direct and concise.The user is a ${persona}. Reference their actual rupee amounts. Never give generic advice. Respond ONLY in valid JSON: { "insights": [{ "type": string, "title": string, "description": string, "priority": string }] } Insight types: overspending | savings_tip | investment_suggestion | recurring_alert | goal_progress`;
-
-        const userPrompt = `Monthly data for ${persona} with goal ${primaryGoal}:
+        const systemPrompt = `You are a personal finance advisor for Indian users named FinSight. Be direct, concise, and conversational.
+        The user is a ${persona} with the goal: ${primaryGoal}. Reference their actual rupee amounts naturally in your answers.
+        Here is their current financial snapshot:
         Income: ₹${totalIncome} | Expenses: ₹${totalExpenses} | Savings this month: ₹${savings}
         Top categories: ${topCategoriesText}
         Budget exceeded in: ${exceededText}
-        Recurring expenses detected: ${recurringText}
-        Spending spikes this month: ${spikesText}
-        Give me 3-5 priority-ranked financial insights.`;
+        Recurring expenses: ${recurringText}
+        Spending spikes: ${spikesText}
+        Answer the user's questions using this context. Do not respond in JSON — respond in plain, helpful natural language.`;
 
-        const { text } = await generateText({
+        const { messages } = await req.json();
+        const modelMessages = await convertToModelMessages(messages);
+        const streamResult = streamText({
             model: google("gemini-2.5-flash"),
             system: systemPrompt,
-            messages: [
-                { role: "user", content: userPrompt }
-            ]
-        });
-        let cleanedRes = text.trim();
-        if (cleanedRes.startsWith("```")) {
-            cleanedRes = cleanedRes.replace(/```json|```/g, "").trim();
-        }
-        const parsed = JSON.parse(cleanedRes)
-        return NextResponse.json(parsed, { status: 200 })
+            messages: modelMessages,
+        })
+        return streamResult.toUIMessageStreamResponse()
     } catch (error) {
-        console.error("Insights route error:", error);
-        return NextResponse.json({ error: "Failed to generate insights" }, { status: 500 });
+        console.error("Chat route error: ", error);
+        return NextResponse.json(
+            { error: "Failed to generate insights" },
+            { status: 500 }
+        )
     }
 }

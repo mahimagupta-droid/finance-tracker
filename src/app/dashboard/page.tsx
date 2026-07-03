@@ -8,6 +8,7 @@ import { BarChart } from "@/components/charts/bar";
 import { useFinanceStore } from "../../lib/store/useFinanceStore"
 import DateRangePicker from "../../components/miscellaneous/DateRangePicker";
 import AIInsightsPanel from "@/components/AIInsightsPanel";
+import AskFinsightChat from "@/components/AskFinsightChat";
 
 export default function Dashboard() {
     const { transactions, loading, fetchTransactions } = useFinanceStore();
@@ -422,6 +423,9 @@ export default function Dashboard() {
                 <h1 className="text-textColor text-2xl font-bold text-center">AI Insights</h1>
                 <AIInsightsPanel />
             </div>
+            {/* <div className="p-3 rounded-xl bg-cyan-50 text-black w-1/4 flex flex-col text-right justify-right mt-3 fixed bottom-4 right-4 z-50"> */}
+            <AskFinsightChat />
+            {/* </div> */}
         </div>
 
     );
