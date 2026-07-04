@@ -1,6 +1,6 @@
 import { PrismaClient } from "../generated/prisma/client";
 import { PrismaNeon } from '@prisma/adapter-neon';
-
+import "dotenv/config";
 const prismaClientSingleton = () => {
     const connectionString = process.env.DATABASE_URL;
     if (!connectionString) throw new Error("DATABASE_URL not set");

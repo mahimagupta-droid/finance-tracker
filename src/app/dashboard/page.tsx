@@ -100,8 +100,13 @@ export default function Dashboard() {
         fetchSpikes();
     }, [fetchTransactions])
 
-    const totalIncome = transactions.filter((transaction: any) => transaction.type == "income").reduce((total: any, currentTransaction: any) => total + currentTransaction.amount, 0);
-    const totalExpenses = transactions.filter((transaction: any) => transaction.type == "expense").reduce((total: any, currentTransaction: any) => total + currentTransaction.amount, 0);
+    const now = new Date();
+    const currentMonthTransanctions = transactions.filter(transaction => {
+        const transactionDate = new Date(transaction.date);
+        return transactionDate.getMonth() == now.getMonth() && transactionDate.getFullYear() == now.getFullYear();
+    })
+    const totalIncome = currentMonthTransanctions.filter((transaction: any) => transaction.type == "income").reduce((total: any, currentTransaction: any) => total + currentTransaction.amount, 0);
+    const totalExpenses = currentMonthTransanctions.filter((transaction: any) => transaction.type == "expense").reduce((total: any, currentTransaction: any) => total + currentTransaction.amount, 0);
     const balance = totalIncome - totalExpenses;
     const expenses = transactions.filter((transaction: any) => transaction.type == "expense")
 

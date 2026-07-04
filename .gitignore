@@ -44,3 +44,7 @@ next-env.d.ts
 /.clerk/
 
 /src/generated/prisma
+
+/BACKLOG.md
+
+/prisma/seed.ts
