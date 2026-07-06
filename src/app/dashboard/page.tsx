@@ -9,7 +9,7 @@ import { useFinanceStore } from "../../lib/store/useFinanceStore"
 import DateRangePicker from "../../components/miscellaneous/DateRangePicker";
 import AIInsightsPanel from "@/components/AIInsightsPanel";
 import AskFinsightChat from "@/components/AskFinsightChat";
-
+import { emergencyFundTarget } from "@/lib/financialCalc";
 export default function Dashboard() {
     const { transactions, loading, fetchTransactions } = useFinanceStore();
     const [showOnboarding, setShowOnboarding] = useState(false);

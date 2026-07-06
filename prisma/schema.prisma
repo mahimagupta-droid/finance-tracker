@@ -13,10 +13,10 @@ model User {
   email         String   @unique
   name          String
   age           Int?
-  monthlyIncome Float?    
-  savingsGoal   Float?    
+  monthlyIncome Float?
+  savingsGoal   Float?
   persona       String?
-  incomeRange   String? 
+  incomeRange   String?
   primaryGoal   String?
   onboarded     Boolean  @default(false)
   createdAt     DateTime @default(now())
@@ -53,4 +53,12 @@ model Transaction {
   updatedAt     DateTime @updatedAt
 
   @@index([clerkId, date(sort: Desc)])
+}
+
+model Saving {
+  id      String   @id @default(cuid())
+  amount  Float
+  label   String
+  date    DateTime
+  clerkId String
 }
