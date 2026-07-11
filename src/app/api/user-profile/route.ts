@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const reqBody = await request.json();
-    const { email, name, age, monthlyIncome, savingsGoal } = reqBody;
+    const { email, name, age, monthlyIncome, savingsGoal, persona, incomeRange, primaryGoal } = reqBody;
     const createResponse = await prisma.user.create({
       data: {
         clerkId: userId,
@@ -22,6 +22,9 @@ export async function POST(request: NextRequest) {
         monthlyIncome: monthlyIncome,
         savingsGoal: savingsGoal,
         onboarded: true,
+        persona,
+        incomeRange,
+        primaryGoal
       },
     });
     return NextResponse.json({

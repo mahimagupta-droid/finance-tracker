@@ -1,13 +1,11 @@
-import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
     try {
         const { userId } = await auth();
-        if (!userId) {
-            return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 })
-        }
+        if (!userId) return NextResponse.json({ message: "Unauthorised" }, { status: 401 });
         const label = req.nextUrl.searchParams.get("label");
         const result = await prisma.saving.aggregate({
             where: {
@@ -16,32 +14,29 @@ export async function GET(req: NextRequest) {
             },
             _sum: { amount: true }
         })
-        const totalSaved = result._sum.amount ?? 0;
-        return NextResponse.json({ success: true, totalSaved })
+        const totalSavings = result._sum.amount ?? 0;
+        return NextResponse.json({ totalSavings }, { status: 200 });
     } catch (error) {
-        console.log("Error getting savings", error);
-        return NextResponse.json({ success: false, message: "Internal Server Error" }, { status: 500 })
+        return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
     }
 }
 
 export async function POST(req: NextRequest) {
     try {
         const { userId } = await auth();
-        if (!userId) {
-            return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 })
-        }
+        if (!userId) return NextResponse.json({ message: "Unauthorised" }, { status: 401 });
         const { amount, label, date } = await req.json();
-        const response = await prisma.saving.create({
+        if (!amount || !label || !date) return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
+        const savingsData = await prisma.saving.create({
             data: {
                 clerkId: userId,
                 amount,
                 label,
-                date: new Date(date)
+                date: new Date(date),
             }
         })
-        return NextResponse.json({ success: true, saving: response })
+        return NextResponse.json(savingsData, { status: 201 });
     } catch (error) {
-        console.log("Error saving", error)
-        return NextResponse.json({ success: false, message: "Internal Server Error" }, { status: 500 })
+        return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
     }
 }

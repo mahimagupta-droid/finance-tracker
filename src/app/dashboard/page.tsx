@@ -9,7 +9,9 @@ import { useFinanceStore } from "../../lib/store/useFinanceStore"
 import DateRangePicker from "../../components/miscellaneous/DateRangePicker";
 import AIInsightsPanel from "@/components/AIInsightsPanel";
 import AskFinsightChat from "@/components/AskFinsightChat";
-import { emergencyFundTarget } from "@/lib/financialCalc";
+import EmergencyFundCalculator from "@/components/EmergencyFundCalculator";
+import GrowthPlanPanel from "@/components/GrowthPlanPanel";
+import SipSimulator from "@/components/SipSimulator";
 export default function Dashboard() {
     const { transactions, loading, fetchTransactions } = useFinanceStore();
     const [showOnboarding, setShowOnboarding] = useState(false);
@@ -208,7 +210,7 @@ export default function Dashboard() {
     };
     if (loading) {
         return (
-            <div className="flex flex-col gap-10 mb-20 animate-pulse">
+            <div className="w-full max-w-7xl mx-auto px-4 md:px-8 flex flex-col gap-10 mb-20 animate-pulse">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
                     <div className="h-28 bg-card rounded-xl border border-border" />
                     <div className="h-28 bg-card rounded-xl border border-border" />
@@ -224,7 +226,7 @@ export default function Dashboard() {
         )
     }
     return (
-        <div className="flex flex-col gap-10 mb-20">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-8 flex flex-col gap-10 mb-20">
             {showOnboarding && (
                 <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
                     <div className="bg-card border border-border rounded-xl p-8 w-full max-w-md flex flex-col gap-6">
@@ -424,14 +426,25 @@ export default function Dashboard() {
                     </div>
                 </div>
             )}
-            <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-2 mt-3">
-                <h1 className="text-textColor text-2xl font-bold text-center">AI Insights</h1>
-                <AIInsightsPanel />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-2 mt-3">
+                    <h1 className="text-textColor text-2xl font-bold text-center">AI Insights</h1>
+                    <AIInsightsPanel />
+                </div>
+                <div className="bg-card rounded-xl p-4 flex flex-col gap-2 mt-3">
+                    <EmergencyFundCalculator />
+                </div>
+                <div className="bg-card rounded-xl p-4 flex flex-col gap-2 mt-3">
+                    <h1 className="text-textColor text-2xl font-bold text-center">Growth Plan</h1>
+                    <GrowthPlanPanel />
+                </div>
+                <div className="bg-card rounded-xl p-4 flex flex-col gap-2 mt-3">
+                    {/* <h1 className="text-textColor text-2xl font-bold text-center">Growth Plan</h1> */}
+                    <SipSimulator />
+                </div>
             </div>
-            {/* <div className="p-3 rounded-xl bg-cyan-50 text-black w-1/4 flex flex-col text-right justify-right mt-3 fixed bottom-4 right-4 z-50"> */}
-            <AskFinsightChat />
-            {/* </div> */}
-        </div>
 
+            <AskFinsightChat />
+        </div>
     );
 }

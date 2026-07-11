@@ -42,7 +42,7 @@ export default function AIInsightsPanel() {
                 </div>
             ))}
             <div className="flex justify-center align-center">
-                <button onClick={() => fetchInsights(true)} className="cursor-pointer rounded border p-3 text-center bg-gray-200 text-black">Refresh Insights</button>
+                <button onClick={() => fetchInsights(true)} className="cursor-pointer rounded border p-3 text-center bg-button text-button">Refresh Insights</button>
             </div>
         </div>
     );

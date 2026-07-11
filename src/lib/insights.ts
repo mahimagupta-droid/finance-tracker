@@ -53,7 +53,6 @@ export async function getReccuringExpenses(userId: string, threeMonthsAgo: Date,
   return recurringItems;
 }
 
-
 export async function getCategorySpending(userId: string, start: Date, end: Date,) {
   const result = await prisma.transaction.groupBy({
     by: ["category"],

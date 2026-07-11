@@ -1,3 +1,4 @@
+import { TypeIcon } from 'lucide-react';
 import { create } from 'zustand'
 
 interface Transaction {
@@ -36,12 +37,21 @@ interface FinanceStore {
     budgetsError: string | null;
     fetchTransactions: () => Promise<void>;
     fetchBudgets: () => Promise<void>;
-
     aiInsights: Insight[];
     insightsLoading: boolean;
     insightsFetched: boolean;
     insightsError: string | null;
+    userPersona: string | null;
+    totalSavings: number;
+    savingsLoading: boolean;
+    fetchTotalSavings: (label: string) => Promise<void>;
+    fetchUserPersona: () => Promise<void>;
     fetchInsights: (force?: boolean) => Promise<void>;
+    growthPlan: { category: string; amount: number; reason: string }[];
+    growthPlanLoading: boolean;
+    growthPlanFetched: boolean;
+    growthPlanError: string | null;
+    fetchGrowthPlan: (force?: boolean) => Promise<void>;
 }
 
 export const useFinanceStore = create<FinanceStore>((set, get) => ({
@@ -50,12 +60,17 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
     loading: true,
     transactionsError: null,
     budgetsError: null,
-
     aiInsights: [],
     insightsLoading: false,
     insightsFetched: false,
     insightsError: null,
-
+    userPersona: null,
+    totalSavings: 0,
+    savingsLoading: false,
+    growthPlan: [],
+    growthPlanLoading: false,
+    growthPlanFetched: false,
+    growthPlanError: null,
     fetchTransactions: async () => {
         set({ loading: true, transactionsError: null });
         try {
@@ -111,4 +126,56 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
             set({ insightsLoading: false });
         }
     },
+
+    fetchTotalSavings: async (label: string) => {
+        set({ savingsLoading: true })
+        try {
+            const response = await fetch(`/api/savings?label=${encodeURIComponent(label)}`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch total savings for label ${label} (${response.status})`);
+            }
+            const data = await response.json();
+            set({ totalSavings: data.totalSavings ?? 0 });
+        } catch (error: any) {
+            set({ totalSavings: 0 });
+            console.error(error.message);
+        } finally {
+            set({ savingsLoading: false });
+        }
+    },
+
+    fetchUserPersona: async () => {
+        try {
+            const response = await fetch("/api/user-profile");
+            if (response.ok) {
+                const data = await response.json();
+                const persona = data.user.persona;
+                set({ userPersona: persona })
+            } else {
+                throw new Error(`Failed to fetch user profile (${response.status})`);
+            }
+        } catch (error: any) {
+            set({ userPersona: null })
+            console.error(error.message)
+        }
+    },
+
+    fetchGrowthPlan: async (force = false) => {
+        const { growthPlanFetched } = get();
+        if (growthPlanFetched && !force) return;
+        try {
+            set({ growthPlanLoading: true })
+            const response = await fetch("/api/ai/growth-plan");
+            if (!response.ok) {
+                const data = await response.json().catch(() => null);
+                throw new Error(data?.error || `Failed to fetch growth plan (${response.status})`);
+            }
+            const data = await response.json();
+            set({ growthPlan: data.allocations, growthPlanFetched: true, growthPlanError: null });
+        } catch (error: any) {
+            set({ growthPlanError: error.message, growthPlanFetched: true, growthPlan: [] });
+        } finally {
+            set({ growthPlanLoading: false });
+        }
+    }
 }));
