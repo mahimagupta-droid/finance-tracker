@@ -5,7 +5,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2 text-xl font-bold text-textColor font-playfair">
-              <span className="text-cyan-500 dark:text-[#00d4ff]">📈 FINSIGHT</span>AI
+              <span className="text-cyan-500 dark:text-[#00d4ff]">finsightai</span>
             </div>
             <p className="text-sm leading-relaxed max-w-xs font-playfair">
               Understand your money. Control your future. Your intelligent companion for tracking expenses and achieving financial goals.
@@ -14,10 +14,11 @@ const Footer = () => {
           <div className="font-lato">
             <h3 className="text-textColor font-semibold mb-4 tracking-wider text-sm uppercase">Quick Links</h3>
             <ul className="flex flex-col gap-3 text-sm">
-              <li><a href="#" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">Home</a></li>
-              <li><a href="#" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">User Profile</a></li>
-              <li><a href="#" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">Transactions</a></li>
-              <li><a href="#" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">Dashboard</a></li>
+              <li><a href="/" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">Home</a></li>
+              <li><a href="/user-profile" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">User Profile</a></li>
+              <li><a href="/transactions" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">Transactions</a></li>
+              <li><a href="/dashboard" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">Dashboard</a></li>
+              <li><a href="/budget" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">Budget</a></li>
             </ul>
           </div>
           <div className="font-lato">
@@ -33,9 +34,9 @@ const Footer = () => {
         <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
           <p>© {new Date().getFullYear()} All rights reserved.</p>
           <div className="flex gap-4">
-            <a href="#" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">Twitter</a>
-            <a href="#" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">LinkedIn</a>
-            <a href="#" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">GitHub</a>
+            <a href="https://x.com/MahimaGupt87886" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">Twitter</a>
+            <a href="https://www.linkedin.com/in/guptamahima/" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">LinkedIn</a>
+            <a href="https://github.com/mahimagupta-droid" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-500 dark:hover:text-[#00d4ff] transition-colors duration-200">GitHub</a>
           </div>
         </div>
       </div>

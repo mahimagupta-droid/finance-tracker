@@ -26,10 +26,10 @@ const lexend = Lexend({
 });
 
 export const metadata: Metadata = {
-  title: "FinsightAi",
-  description: "A financial tracker app that allows users to track their expenses, set budgets, and gain insights into their spending habits.",
+  title: "finsightai",
+  description: "Track expenses, set budgets, and get AI-powered financial insights with FinSight AI — a personal finance platform that helps you save smarter, detect spending patterns, and plan your financial future.",
   icons: {
-    icon: '/projectLogo.png',
+    icon: '/project-icon.png',
   },
 };
 

@@ -1,5 +1,5 @@
 "use client";
-import Logo from "../../../public/projectLogo.png";
+import Logo from "../../../public/dark-mode-logo.png";
 import Image from "next/image";
 import { SignInButton, SignOutButton, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
@@ -20,9 +20,8 @@ export default function Navbar() {
   ];
 
   return (
-    <div className="sticky top-0 z-50 backdrop-blur-md bg-background/85 dark:bg-neutral-950/80 border-b border-border transition-colors duration-300">
-      <div className="pl-2 pr-8 flex items-center justify-between h-24 md:h-30">
-        {/* Logo */}
+    <div className="sticky top-0 z-50 backdrop-blur-md bg-background dark:bg-black border-b border-border transition-colors duration-300">
+      <div className="pl-4 pr-8 flex items-center justify-between h-24 md:h-30">
         <div className="flex items-center">
           <Image
             src={Logo}
