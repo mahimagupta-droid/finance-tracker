@@ -43,7 +43,7 @@ export default function Navbar() {
         </div>
 
         <div className="hidden md:flex items-center gap-4">
-          <ThemeToggle />
+          {/* <ThemeToggle /> */}
           {isSignedIn ? (
             <>
               <SignOutButton>

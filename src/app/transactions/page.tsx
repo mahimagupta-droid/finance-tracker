@@ -301,7 +301,8 @@ export default function AddTransactionsPage() {
         </div>
       </div>
 
-      <div className="mb-10 mt-15 bg-transparent sm:bg-card border-none sm:border border-border p-4 sm:p-5 rounded-lg transition-colors duration-300 w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-10 sm:w-2/3">
+      {/* <div className="mb-10 mt-15 bg-transparent sm:bg-card border-none sm:border border-border p-4 sm:p-5 rounded-lg transition-colors duration-300 w-full max-w-8xl mx-auto px-4 sm:px-6 md:px-10 sm:w-2/3"> */}
+      <div className="mb-10 mt-15 bg-transparent sm:bg-card border-none sm:border border-border p-4 sm:p-5 rounded-lg transition-colors duration-300 max-w-7xl mx-auto px-4 sm:px-6 md:px-10 sm:w-3/4">
         <div className="flex flex-col items-center gap-4">
           <h3 className="flex justify-center items-center text-3xl text-textColor font-semibold">
             Transaction Records
@@ -345,7 +346,7 @@ export default function AddTransactionsPage() {
         )}
 
         {!transactionsError && visibleTransactions.length > 0 && (
-          <div className="mb-14 mt-14 flex gap-6 flex-wrap justify-center w-full">
+          <div className="mb-14 mt-14 flex gap-6 flex-wrap justify-center w-full grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4">
             {visibleTransactions.map((transactions) => (
               <TransactionCard
                 key={transactions.id}

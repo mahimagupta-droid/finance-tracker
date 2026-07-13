@@ -9,7 +9,7 @@ export default function FAQs() {
                 defaultValue="shipping"
                 className="w-11/12 rounded-md text-card-textColor mb-15 mt-15 flex flex-col border border-border bg-card p-5 justify-center font-lato transition-colors duration-300"
             >
-                <h1 className="flex flex-col justify-center items-center text-3xl font-lexend p-5">Frequently Asked Questions</h1>
+                <h2 className="flex flex-col justify-center items-center text-2xl sm:text-3xl font-bold font-lexend p-5 text-center">Frequently Asked Questions</h2>
                 <AccordionItem value="shipping">
                     <AccordionTrigger className="hover:text-primary transition text-center"><span className="flex-1 text-center text-lg">What is this platform?</span></AccordionTrigger>
                     <AccordionContent>
