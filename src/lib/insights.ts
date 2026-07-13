@@ -13,11 +13,12 @@ export async function getReccuringExpenses(userId: string, threeMonthsAgo: Date,
   const groupedByDescription: Record<string, { month: string; amount: number }[]> = {};
 
   transactions.forEach((t) => {
+    const description = t.description || "";
     const monthKey = `${t.date.getFullYear()}-${t.date.getMonth()}`;
-    if (!groupedByDescription[t.description]) {
-      groupedByDescription[t.description] = [];
+    if (!groupedByDescription[description]) {
+      groupedByDescription[description] = [];
     }
-    groupedByDescription[t.description].push({
+    groupedByDescription[description].push({
       month: monthKey,
       amount: t.amount,
     });
@@ -185,6 +186,6 @@ export async function buildFinancialSummary(userId: string) {
       spent: spent?.total ?? 0,
     }
   }).filter((b) => b.spent > b.limit);
-  console.log("income:", totalIncome, "expenses:", totalExpenses, "savings:", savings, "recurringExpenses:", recurringExpenses, "monthlyExpenses:", monthlyExpenses, "expenseSpikes:", expenseSpikes, "exceedingBudget:", exceedingBudget);
+  // console.log("income:", totalIncome, "expenses:", totalExpenses, "savings:", savings, "recurringExpenses:", recurringExpenses, "monthlyExpenses:", monthlyExpenses, "expenseSpikes:", expenseSpikes, "exceedingBudget:", exceedingBudget);
   return { persona, incomeRange, primaryGoal, totalIncome, totalExpenses, savings, recurringExpenses, monthlyExpenses, expenseSpikes, exceedingBudget };
 }

@@ -55,7 +55,7 @@ export async function GET() {
 
         return NextResponse.json(parsed, { status: 200 });
     } catch (error) {
-        console.error("Growth plan route error:", error);
+        // console.error("Growth plan route error:", error);
         return NextResponse.json({ error: "Failed to generate growth plan" }, { status: 500 });
     }
 }

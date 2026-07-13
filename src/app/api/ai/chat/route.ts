@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
         })
         return streamResult.toUIMessageStreamResponse()
     } catch (error) {
-        console.error("Chat route error: ", error);
+        // console.error("Chat route error: ", error);
         return NextResponse.json(
             { error: "Failed to generate insights" },
             { status: 500 }

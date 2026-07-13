@@ -31,7 +31,7 @@ export default function EmergencyFundCalculator() {
                 await fetchTotalSavings("Emergency Fund");
             }
         } catch (error) {
-            console.error("Failed to add saving:", error);
+            // console.error("Failed to add saving:", error);
         }
     };
     return (

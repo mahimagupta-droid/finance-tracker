@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json({ success: true, data: data });
     } catch (error) {
-        console.error("Error fetching category spending:", error);
+        // console.error("Error fetching category spending:", error);
         return NextResponse.json({ error: "Failed to fetch category spending" }, { status: 500 });
     }
 }

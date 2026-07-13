@@ -57,10 +57,10 @@ export async function GET(req: NextRequest) {
             cleanedRes = cleanedRes.replace(/```json|```/g, "").trim();
         }
         const parsed = JSON.parse(cleanedRes)
-        console.log("Insight types received:", parsed.insights.map((i: any) => i.type));
+        // console.log("Insight types received:", parsed.insights.map((i: any) => i.type));
         return NextResponse.json(parsed, { status: 200 })
     } catch (error) {
-        console.error("Insights route error:", error);
+        // console.error("Insights route error:", error);
         return NextResponse.json({ error: "Failed to generate insights" }, { status: 500 });
     }
 }

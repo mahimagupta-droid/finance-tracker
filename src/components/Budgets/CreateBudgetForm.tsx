@@ -3,6 +3,7 @@ import { EXPENSE_CATEGORIES } from "@/lib/constants";
 import { useForm } from "react-hook-form";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { z } from "zod";
+import { NextResponse } from "next/server";
 const schema = z.object({
   category: z.string().min(1, "Category is required"),
   monthlyLimit: z.number().min(1, "Must be greater than 0"),
@@ -35,8 +36,8 @@ export default function CreateBudgetForm({ onSuccess }: CreateBudgetFormProps) {
       if (!res.ok) throw new Error("Failed to create budget");
       reset();
       onSuccess();
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      return NextResponse.json({ message: error.message }, { status: 500 })
     }
   };
 

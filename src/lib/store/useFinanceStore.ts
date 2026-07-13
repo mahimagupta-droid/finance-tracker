@@ -137,7 +137,7 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
             set({ totalSavings: data.totalSavings ?? 0 });
         } catch (error: any) {
             set({ totalSavings: 0 });
-            console.error(error.message);
+            // console.error(error.message);
         } finally {
             set({ savingsLoading: false });
         }
@@ -155,7 +155,7 @@ export const useFinanceStore = create<FinanceStore>((set, get) => ({
             }
         } catch (error: any) {
             set({ userPersona: null })
-            console.error(error.message)
+            // console.error(error.message)
         }
     },
 
