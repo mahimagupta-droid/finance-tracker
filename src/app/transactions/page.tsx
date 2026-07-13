@@ -144,7 +144,6 @@ export default function AddTransactionsPage() {
     );
   }
 
-  // existing return (the form + transaction list) goes here
   return (
     <div>
       <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center px-4 sm:px-8 md:px-16 gap-6 min-h-[70vh] my-8 md:my-10">
@@ -246,7 +245,7 @@ export default function AddTransactionsPage() {
                   onChange={(e) => setTransaction({ ...transaction, paymentMethod: e.target.value as "cash" | "card" | "upi" | "bank_transfer" | "other" })}
                   className="w-full bg-input text-textColor border border-border rounded-lg px-3 py-2 focus:ring-2 focus:ring-ring focus:outline-none transition"
                 >
-                  <option value="select" disabled>Select Method</option>
+                  <option value="select">Select Method</option>
                   <option value="cash">Cash</option>
                   <option value="card">Card</option>
                   <option value="upi">UPI</option>

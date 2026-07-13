@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@/generated/prisma/client";
-
+import { currentUser } from "@clerk/nextjs/server";
 export async function POST(request: NextRequest) {
   try {
     const { userId } = await auth();
@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     // console.error("Error creating user:", error);
+
     return NextResponse.json(
       { error: "Failed to create user" },
       { status: 500 },
@@ -93,11 +94,29 @@ export async function PUT(request: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const { email, name, age, monthlyIncome, savingsGoal, onboarded, persona, incomeRange, primaryGoal } =
+    const { age, monthlyIncome, savingsGoal, onboarded, persona, incomeRange, primaryGoal } =
       await request.json();
-    const updatedUser = await prisma.user.update({
+
+    // Pull identity from Clerk directly — never trust client-supplied email/name
+    const clerkUser = await currentUser();
+    const email = clerkUser?.emailAddresses?.[0]?.emailAddress ?? "";
+    const name = clerkUser?.fullName ?? clerkUser?.firstName ?? "";
+
+    const updatedUser = await prisma.user.upsert({
       where: { clerkId: userId },
-      data: { email, name, age, monthlyIncome, savingsGoal, onboarded, persona, incomeRange, primaryGoal },
+      update: { age, monthlyIncome, savingsGoal, onboarded, persona, incomeRange, primaryGoal },
+      create: {
+        clerkId: userId,
+        email,
+        name,
+        age,
+        monthlyIncome,
+        savingsGoal,
+        onboarded,
+        persona,
+        incomeRange,
+        primaryGoal,
+      },
     });
     return NextResponse.json({
       message: "User updated successfully",
@@ -105,15 +124,6 @@ export async function PUT(request: NextRequest) {
       user: updatedUser,
     });
   } catch (error) {
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2025"
-    ) {
-      return NextResponse.json(
-        { error: "User not found", success: false },
-        { status: 404 },
-      );
-    }
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

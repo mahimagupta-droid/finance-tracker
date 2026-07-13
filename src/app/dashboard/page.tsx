@@ -12,6 +12,7 @@ import AskFinsightChat from "@/components/AskFinsightChat";
 import EmergencyFundCalculator from "@/components/EmergencyFundCalculator";
 import GrowthPlanPanel from "@/components/GrowthPlanPanel";
 import SipSimulator from "@/components/SipSimulator";
+
 export default function Dashboard() {
     const { transactions, loading, fetchTransactions } = useFinanceStore();
     const [showOnboarding, setShowOnboarding] = useState(false);
@@ -20,6 +21,7 @@ export default function Dashboard() {
     const [recurringItems, setRecurringItems] = useState<{ description: string; averageAmount: number; occurrences: number }[]>([]);
     const [spikes, setSpikes] = useState<{ category: string; currentSpend: number; average: number; percentageIncrease: number }[]>([]);
     const [currentStep, setCurrentStep] = useState(0);
+
     const fetchSpikes = async () => {
         const response = await fetch("/api/insights/spikes");
         if (response.ok) {
@@ -29,6 +31,7 @@ export default function Dashboard() {
             }
         }
     }
+
     const fetchRecurring = async () => {
         const response = await fetch("/api/insights/recurring");
         if (response.ok) {
@@ -38,6 +41,7 @@ export default function Dashboard() {
             }
         }
     }
+
     const [onboardingData, setOnboardingData] = useState({
         age: 0,
         monthlyIncome: 0,
@@ -61,9 +65,11 @@ export default function Dashboard() {
             }
         }
     }
+
     const handleRangeChange = (start: Date, end: Date) => {
         fetchCategorySpending(start, end);
     }
+
     const handleOnboardingSubmit = async () => {
         const response = await fetch("/api/user-profile", {
             method: "PUT",
@@ -90,9 +96,12 @@ export default function Dashboard() {
             if (data.user.onboarded === false) {
                 setShowOnboarding(true);
             }
+        } else if (response.status === 404) {
+            setShowOnboarding(true);
         }
         setOnboardingLoading(false);
     }
+
     useEffect(() => {
         fetchTransactions();
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -208,7 +217,8 @@ export default function Dashboard() {
             },
         ],
     };
-    if (loading) {
+
+    if (loading || onboardingLoading) {
         return (
             <div className="w-full max-w-7xl mx-auto px-4 md:px-8 flex flex-col gap-10 mb-20 animate-pulse">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
@@ -228,8 +238,8 @@ export default function Dashboard() {
     return (
         <div className="w-full max-w-7xl mx-auto px-4 md:px-8 flex flex-col gap-10 mb-20">
             {showOnboarding && (
-                <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center">
-                    <div className="bg-card border border-border rounded-xl p-8 w-full max-w-md flex flex-col gap-6">
+                <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4">
+                    <div className="bg-card border border-border rounded-xl p-6 md:p-8 w-full max-w-md flex flex-col gap-6">
                         <div>
                             <h2 className="text-2xl font-bold text-textColor">Welcome to FinsightAI</h2>
                             <p className="text-accent mt-1">Step {currentStep + 1} of 3</p>
@@ -380,14 +390,14 @@ export default function Dashboard() {
                 </div>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
-                <div className="md:col-span-2 bg-card border border-border p-6 rounded-xl w-full h-156.25 transition-colors duration-300">
+                <div className="md:col-span-2 bg-card border border-border p-6 rounded-xl w-full h-[400px] md:h-[625px] transition-colors duration-300">
                     <PieChart data={pieChartData} />
                 </div>
                 <div className="flex flex-col gap-6">
-                    <div className="bg-card border border-border p-6 rounded-xl h-75 transition-colors duration-300">
+                    <div className="bg-card border border-border p-6 rounded-xl h-[250px] md:h-[300px] transition-colors duration-300">
                         <LineChart data={expenseChartData} />
                     </div>
-                    <div className="bg-card border border-border p-6 rounded-xl h-75 transition-colors duration-300">
+                    <div className="bg-card border border-border p-6 rounded-xl h-[250px] md:h-[300px] transition-colors duration-300">
                         <BarChart data={barChartData} />
                     </div>
                 </div>
