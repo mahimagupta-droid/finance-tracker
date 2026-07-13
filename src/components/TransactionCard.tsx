@@ -62,7 +62,7 @@ export function TransactionCard({ _id, amount, category, type, date, description
 
   if (isEditing) {
     return (
-      <Card className="w-[320px] bg-card text-card-textColor p-4 rounded border border-border transition-colors duration-300">
+      <Card className="w-full max-w-[320px] bg-card text-card-textColor p-4 rounded border border-border transition-colors duration-300">
         <form onSubmit={handleUpdate} className="flex flex-col gap-3 font-lexend mt-2">
           <input
             type="number"
@@ -123,7 +123,7 @@ export function TransactionCard({ _id, amount, category, type, date, description
 
   return (
     <>
-      <Card className="w-[320px] bg-card text-card-textColor p-4 rounded border border-border transition-colors duration-300">
+      <Card className="w-full max-w-[320px] bg-card text-card-textColor p-4 rounded border border-border transition-colors duration-300">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
             ₹{amount} • {category}

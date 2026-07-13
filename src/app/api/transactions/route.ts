@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@/generated/prisma/client";
 
 export async function POST(request: NextRequest) {
   try {
@@ -45,11 +46,13 @@ export async function POST(request: NextRequest) {
       { status: 201 },
     );
   } catch (error) {
-    // console.log(error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2003") {
+      return NextResponse.json(
+        { error: "PROFILE_REQUIRED", message: "Please complete your profile before adding transactions." },
+        { status: 409 },
+      );
+    }
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
