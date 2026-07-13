@@ -8,7 +8,7 @@ const Footer = () => {
               <span className="text-cyan-500 dark:text-[#00d4ff]">finsightai</span>
             </div>
             <p className="text-sm leading-relaxed max-w-xs font-playfair">
-              Understand your money. Control your future. Your intelligent companion for tracking expenses and achieving financial goals.
+              Track expenses, set budgets, and get AI-powered financial insights with FinSight AI — a personal finance platform that helps you save smarter, detect spending patterns, and plan your financial future.
             </p>
           </div>
           <div className="font-lato">

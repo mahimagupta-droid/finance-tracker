@@ -35,7 +35,7 @@ export default function EmergencyFundCalculator() {
         }
     };
     return (
-        <div className="w-full max-w-md mx-auto p-6 bg-card rounded-2xl backdrop-blur-sm shadow-lg">
+        <div className="w-full max-w-md mx-auto bg-card rounded-2xl">
             <h1 className="text-2xl font-bold mb-6 text-foreground">Emergency Fund Calculator</h1>
             <div className="mb-6">
                 <label className="block text-sm font-medium text-muted-foreground mb-2">Monthly Expenses</label>

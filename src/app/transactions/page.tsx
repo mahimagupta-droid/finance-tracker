@@ -88,7 +88,7 @@ export default function AddTransactionsPage() {
             <form className="grid grid-cols-1 md:grid-cols-2 gap-6 font-lexend" onSubmit={handleSubmit}>
               <div className="flex flex-col">
                 <label htmlFor="amount" className="text-sm mb-1 text-muted-textColor">
-                  Amount
+                  Amount <span className="text-danger">*</span>
                 </label>
                 <input
                   type="number"
@@ -102,7 +102,7 @@ export default function AddTransactionsPage() {
               </div>
               <div className="flex flex-col">
                 <label htmlFor="type" className="text-sm mb-1 text-muted-textColor">
-                  Type
+                  Type <span className="text-danger">*</span>
                 </label>
                 <select
                   id="type"
@@ -111,14 +111,14 @@ export default function AddTransactionsPage() {
                   onChange={(e) => setTransaction({ ...transaction, type: e.target.value as "expense" | "income", category: "" })}
                   className="w-full bg-input text-textColor border border-border rounded-lg px-3 py-2 focus:ring-2 focus:ring-ring focus:outline-none transition"
                 >
-                  <option value="select" disabled defaultChecked>Select Transaction Type</option>
+                  <option value="select">Select Transaction Type</option>
                   <option value="expense">Expense</option>
                   <option value="income">Income</option>
                 </select>
               </div>
               <div className="flex flex-col">
                 <label htmlFor="category" className="text-sm mb-1 text-muted-textColor">
-                  Category
+                  Category <span className="text-danger">*</span>
                 </label>
                 <select
                   id="category"
@@ -128,7 +128,7 @@ export default function AddTransactionsPage() {
                   className="w-full bg-input text-textColor border border-border rounded-lg px-3 py-2 focus:ring-2 focus:ring-ring focus:outline-none transition"
                   disabled={transaction.type === "select"}
                 >
-                  <option value="" disabled defaultChecked>Select Category</option>
+                  <option value="">Select Category</option>
                   {transaction.type === "expense" && (EXPENSE_CATEGORIES as string[]).map((cat: string) => (
                     <option key={cat} value={cat}>
                       {cat.split('_').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
@@ -143,7 +143,7 @@ export default function AddTransactionsPage() {
               </div>
               <div className="flex flex-col">
                 <label htmlFor="description" className="text-sm mb-1 text-muted-textColor">
-                  Description
+                  Description <span className="text-foreground/30 text-[12px]">(optional)</span>
                 </label>
                 <textarea
                   id="description"
@@ -156,7 +156,7 @@ export default function AddTransactionsPage() {
               </div>
               <div className="flex flex-col">
                 <label htmlFor="date" className="text-sm mb-1 text-muted-textColor">
-                  Date
+                  Date <span className="text-danger">*</span>
                 </label>
                 <input
                   type="date"
@@ -169,7 +169,7 @@ export default function AddTransactionsPage() {
               </div>
               <div className="flex flex-col">
                 <label htmlFor="paymentMethod" className="text-sm mb-1 text-muted-textColor">
-                  Payment Method
+                  Payment Method <span className="text-danger">*</span>
                 </label>
                 <select
                   id="paymentMethod"
@@ -268,7 +268,7 @@ export default function AddTransactionsPage() {
                 category={transactions.category}
                 type={transactions.type}
                 date={new Date(transactions.date)}
-                description={transactions.description}
+                description={transactions.description ?? ""}
                 paymentMethod={transactions.paymentMethod ?? ""}
                 isEssential={transactions.isEssential}
                 isRecurring={transactions.isRecurring}

@@ -14,7 +14,6 @@ export async function POST(request: NextRequest) {
       amount == null || amount <= 0 ||
       !type || type === "select" ||
       !category || category === "select" ||
-      !description ||
       !date ||
       !paymentMethod || paymentMethod === "select"
     ) {

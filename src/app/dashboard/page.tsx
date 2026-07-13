@@ -431,7 +431,7 @@ export default function Dashboard() {
                     <h1 className="text-textColor text-2xl font-bold text-center">AI Insights</h1>
                     <AIInsightsPanel />
                 </div>
-                <div className="bg-card rounded-xl p-4 flex flex-col gap-2 mt-3">
+                <div className="bg-card rounded-xl p-4 flex flex-col mt-3">
                     <EmergencyFundCalculator />
                 </div>
                 <div className="bg-card rounded-xl p-4 flex flex-col gap-2 mt-3">
@@ -439,7 +439,6 @@ export default function Dashboard() {
                     <GrowthPlanPanel />
                 </div>
                 <div className="bg-card rounded-xl p-4 flex flex-col gap-2 mt-3">
-                    {/* <h1 className="text-textColor text-2xl font-bold text-center">Growth Plan</h1> */}
                     <SipSimulator />
                 </div>
             </div>

@@ -1,4 +1,3 @@
-import { TypeIcon } from 'lucide-react';
 import { create } from 'zustand'
 
 interface Transaction {
@@ -6,7 +5,7 @@ interface Transaction {
     amount: number;
     type: string;
     category: string;
-    description: string;
+    description?: string | null;
     date: string;
     paymentMethod?: string;
     isEssential: boolean;
