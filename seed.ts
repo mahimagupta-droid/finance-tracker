@@ -1,7 +1,7 @@
 import "dotenv/config";
 import prisma from "./src/lib/prisma";
 
-const CLERK_ID = "user_3G7pDzP7ikWSW2vOHAA3OTCvuae";
+const CLERK_ID = "user_3GRxHLl3ZZwCt5RZHhakAWn5SCp";
 
 async function main() {
     // ---------- TRANSACTIONS ----------

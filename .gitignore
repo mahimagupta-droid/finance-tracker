@@ -47,6 +47,8 @@ next-env.d.ts
 
 /BACKLOG.md
 
-/prisma/seed.ts
+/seed.ts
 
 /ARCHITECTURE.md
+
+/schema.prisma

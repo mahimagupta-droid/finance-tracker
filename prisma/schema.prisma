@@ -22,12 +22,17 @@ model User {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
+  transactions Transaction[]
+  budgets      Budget[]
+  savings      Saving[]
+
   @@index([clerkId])
 }
 
 model Budget {
   id           String   @id @default(cuid())
   clerkId      String
+  user         User     @relation(fields: [clerkId], references: [clerkId], onDelete: Cascade)
   category     String
   monthlyLimit Float
   month        Int
@@ -41,6 +46,7 @@ model Budget {
 model Transaction {
   id            String   @id @default(cuid())
   clerkId       String
+  user          User     @relation(fields: [clerkId], references: [clerkId], onDelete: Cascade)
   amount        Float
   type          String
   category      String
@@ -61,4 +67,5 @@ model Saving {
   label   String
   date    DateTime
   clerkId String
+  user    User     @relation(fields: [clerkId], references: [clerkId], onDelete: Cascade)
 }
