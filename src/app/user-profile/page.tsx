@@ -177,21 +177,21 @@ export default function UserProfilePage() {
     }, []);
 
     return (
-        <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center px-8 md:px-16 gap-16 min-h-[70vh] mt-11 mb-11">
+        <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center px-4 sm:px-8 md:px-16 gap-8 md:gap-16 min-h-[70vh] my-8 md:my-11">
             {user?.clerkId ? (
-                <div className="w-full max-w-md bg-card text-card-textColor border border-border rounded-xl shadow-2xl p-8 font-lato">
+                <div className="w-full max-w-md bg-card text-card-textColor border border-border rounded-xl shadow-2xl p-6 md:p-8 font-lato">
                     <div className="flex flex-row items-center justify-center gap-2 mb-6">
                         <User2Icon className="w-8 h-8 text-primary" />
                         <h1 className="text-xl font-semibold">User Profile</h1>
                     </div>
                     <dl className="flex flex-col divide-y divide-border/60">
-                        <div className="flex items-baseline justify-between gap-4 py-2.5">
+                        <div className="flex items-baseline justify-between gap-4 py-2.5 min-w-0">
                             <dt className="text-sm text-muted-textColor shrink-0">Email</dt>
-                            <dd className="text-textColor font-medium text-right truncate">{user.email}</dd>
+                            <dd className="text-textColor font-medium text-right truncate min-w-0" title={user.email}>{user.email}</dd>
                         </div>
-                        <div className="flex items-baseline justify-between gap-4 py-2.5">
+                        <div className="flex items-baseline justify-between gap-4 py-2.5 min-w-0">
                             <dt className="text-sm text-muted-textColor shrink-0">Name</dt>
-                            <dd className="text-textColor font-medium text-right truncate">{user.name}</dd>
+                            <dd className="text-textColor font-medium text-right truncate min-w-0" title={user.name}>{user.name}</dd>
                         </div>
                         <div className="flex items-baseline justify-between gap-4 py-2.5">
                             <dt className="text-sm text-muted-textColor shrink-0">Age</dt>
@@ -228,12 +228,12 @@ export default function UserProfilePage() {
                     </div>
                 </div>
             ) : (
-                <div className="flex-1 flex items-center justify-center px-6">
-                    <div className="w-full max-w-2xl bg-card text-card-textColor border border-border rounded-xl shadow-2xl p-8">
+                <div className="flex-1 flex items-center justify-center px-4 sm:px-6">
+                    <div className="w-full max-w-2xl bg-card text-card-textColor border border-border rounded-xl shadow-2xl p-6 md:p-8">
                         <h3 className="text-3xl font-semibold text-center mb-8 text-textColor">
                             User Profile
                         </h3>
-                        <form className="grid grid-cols-1 md:grid-cols-2 gap-6" method="submit" onSubmit={handleCreateUser}>
+                        <form className="grid grid-cols-1 md:grid-cols-2 gap-6" method="submit" onSubmit={(e) => { e.preventDefault(); updateUser(); }}>
                             <div className="flex flex-col">
                                 <label className="text-sm mb-1 text-muted-textColor">
                                     Email
@@ -304,13 +304,73 @@ export default function UserProfilePage() {
                                     placeholder="eg. 100000"
                                 />
                             </div>
-                            <div className="md:col-span-2 flex justify-center mt-4">
-                                <button
-                                    type="submit"
-                                    disabled={creatingUser}
-                                    className="bg-primary text-primary-textColor px-6 py-2 rounded-lg font-medium hover:bg-secondary transition duration-200 shadow-md disabled:opacity-50 cursor-pointer"
+
+                            <div className="flex flex-col md:col-span-2">
+                                <label className="text-sm mb-2 text-muted-textColor">
+                                    Persona
+                                </label>
+                                <div className="flex flex-col md:flex-row gap-2">
+                                    {["student", "professional", "freelancer"].map((p) => (
+                                        <button
+                                            type="button"
+                                            key={p}
+                                            onClick={() => setUser(prev => ({ ...prev, persona: p } as UserTypes))}
+                                            className={`flex-1 px-4 py-2 rounded-lg border capitalize text-left transition ${user?.persona === p
+                                                ? "border-primary bg-primary/10 text-primary"
+                                                : "border-border text-textColor"
+                                                }`}
+                                        >
+                                            {p}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col">
+                                <label className="text-sm mb-1 text-muted-textColor">
+                                    Income Range
+                                </label>
+                                <select
+                                    value={user?.incomeRange || ""}
+                                    onChange={(e) =>
+                                        setUser(prev => ({ ...prev, incomeRange: e.target.value } as UserTypes))
+                                    }
+                                    className="w-full bg-input text-textColor border border-border rounded-lg px-3 py-2 focus:ring-2 focus:ring-ring focus:outline-none transition"
                                 >
-                                    {creatingUser ? "Creating User" : "Create User"}
+                                    <option value="">Select income range</option>
+                                    <option value="<15k">Below ₹15,000</option>
+                                    <option value="15k-50k">₹15,000 – ₹50,000</option>
+                                    <option value="50k-1L">₹50,000 – ₹1,00,000</option>
+                                    <option value=">1L">Above ₹1,00,000</option>
+                                </select>
+                            </div>
+
+                            <div className="flex flex-col">
+                                <label className="text-sm mb-1 text-muted-textColor">
+                                    Primary Financial Goal
+                                </label>
+                                <select
+                                    value={user?.primaryGoal || ""}
+                                    onChange={(e) =>
+                                        setUser(prev => ({ ...prev, primaryGoal: e.target.value } as UserTypes))
+                                    }
+                                    className="w-full bg-input text-textColor border border-border rounded-lg px-3 py-2 focus:ring-2 focus:ring-ring focus:outline-none transition"
+                                >
+                                    <option value="">Select a goal</option>
+                                    <option value="Save More">Save More</option>
+                                    <option value="Invest">Invest</option>
+                                    <option value="Clear Debt">Clear Debt</option>
+                                    <option value="Emergency Fund">Build Emergency Fund</option>
+                                </select>
+                            </div>
+
+                            <div className="md:col-span-2 flex justify-center gap-4 mt-4">
+                                <button
+                                    type="button"
+                                    onClick={handleCreateUser}
+                                    className="border border-border text-textColor px-6 py-2 rounded-lg font-medium hover:bg-border/20 transition duration-200 disabled:opacity-50 cursor-pointer"
+                                >
+                                    Create Profile
                                 </button>
                             </div>
                         </form>
@@ -319,7 +379,7 @@ export default function UserProfilePage() {
             )}
             {editingUser && (
                 <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4">
-                    <div className="flex w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-card text-card-textColor border border-border rounded-xl shadow-2xl p-8">
+                    <div className="flex w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-card text-card-textColor border border-border rounded-xl shadow-2xl p-6 md:p-8">
                         <div className="w-full h-full">
                             <h3 className="text-3xl font-semibold text-center mb-8 text-textColor">
                                 Update Profile
@@ -428,7 +488,7 @@ export default function UserProfilePage() {
                                         }
                                         className="w-full bg-input text-textColor border border-border rounded-lg px-3 py-2 focus:ring-2 focus:ring-ring focus:outline-none transition"
                                     >
-                                        <option value="" disabled>Select income range</option>
+                                        <option value="">Select income range</option>
                                         <option value="<15k">Below ₹15,000</option>
                                         <option value="15k-50k">₹15,000 – ₹50,000</option>
                                         <option value="50k-1L">₹50,000 – ₹1,00,000</option>
@@ -447,7 +507,7 @@ export default function UserProfilePage() {
                                         }
                                         className="w-full bg-input text-textColor border border-border rounded-lg px-3 py-2 focus:ring-2 focus:ring-ring focus:outline-none transition"
                                     >
-                                        <option value="" disabled>Select a goal</option>
+                                        <option value="">Select a goal</option>
                                         <option value="Save More">Save More</option>
                                         <option value="Invest">Invest</option>
                                         <option value="Clear Debt">Clear Debt</option>
@@ -483,7 +543,7 @@ export default function UserProfilePage() {
                     <Image
                         src={Background}
                         alt="User Profile Background"
-                        className="w-full max-w-112.5 lg:max-w-150 h-auto object-contain drop-shadow-[0_20px_50px_rgba(0,109,170,0.5)] transition-transform duration-700"
+                        className="w-full max-w-[450px] lg:max-w-[600px] h-auto object-contain drop-shadow-[0_20px_50px_rgba(0,109,170,0.5)] transition-transform duration-700"
                         priority
                     />
                 </div>
