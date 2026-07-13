@@ -5,6 +5,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@/generated/prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs/server";
 export async function POST(request: NextRequest) {
   try {
     const { userId } = await auth();
@@ -33,8 +34,6 @@ export async function POST(request: NextRequest) {
       success: true,
     });
   } catch (error) {
-    // console.error("Error creating user:", error);
-
     return NextResponse.json(
       { error: "Failed to create user" },
       { status: 500 },
@@ -67,24 +66,21 @@ export async function GET() {
 }
 
 export async function DELETE() {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   try {
-    const { userId } = await auth();
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    await prisma.user.delete({ where: { clerkId: userId } }); // no need to capture return value
-    return NextResponse.json({
-      message: "User profile deleted successfully",
-      success: true,
-    });
+    await prisma.user.deleteMany({ where: { clerkId: userId } });
+    const client = await clerkClient();
+    await client.users.deleteUser(userId);
+    return NextResponse.json({ success: true });
   } catch (error) {
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2025"
-    ) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-    return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
+    console.error("Account deletion failed:", error);
+    return NextResponse.json(
+      { error: "Failed to delete account" },
+      { status: 500 }
+    );
   }
 }
 
@@ -96,8 +92,6 @@ export async function PUT(request: NextRequest) {
     }
     const { age, monthlyIncome, savingsGoal, onboarded, persona, incomeRange, primaryGoal } =
       await request.json();
-
-    // Pull identity from Clerk directly — never trust client-supplied email/name
     const clerkUser = await currentUser();
     const email = clerkUser?.emailAddresses?.[0]?.emailAddress ?? "";
     const name = clerkUser?.fullName ?? clerkUser?.firstName ?? "";

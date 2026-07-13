@@ -38,15 +38,6 @@ export async function POST(req: Request) {
   if (evt.type === "user.created") {
     const { id, email_addresses, name } = evt.data;
 
-    // await prisma.user.create({
-    //   data: {
-    //     clerkId: id,
-    //     // email: email_addresses[0].email_address || '',
-    //     email: email_addresses?.[0]?.email_address ?? '',
-    //     name: name ?? '',
-    //      onboarded: false,
-    //   },
-    // })
     await prisma.user.upsert({
       where: {
         clerkId: id,
@@ -59,6 +50,13 @@ export async function POST(req: Request) {
         onboarded: false,
       },
     });
+  } else if (evt.type === "user.deleted") {
+    const clerkId = evt.data.id;
+    if (clerkId) {
+      await prisma.user.deleteMany({
+        where: { clerkId },
+      });
+    }
   }
 
   return new Response("OK", { status: 200 });

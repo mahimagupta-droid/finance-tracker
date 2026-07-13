@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-
+import { Prisma } from "@/generated/prisma/client";
 export async function GET(req: NextRequest) {
     try {
         const { userId } = await auth();
@@ -37,6 +37,12 @@ export async function POST(req: NextRequest) {
         })
         return NextResponse.json(savingsData, { status: 201 });
     } catch (error) {
-        return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2003") {
+            return NextResponse.json(
+                { error: "PROFILE_REQUIRED", message: "Please complete your profile before adding transactions." },
+                { status: 409 },
+            );
+        }
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }
