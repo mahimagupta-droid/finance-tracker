@@ -4,6 +4,12 @@ type DashboardCardProps = {
     type: "income" | "expense" | "balance";
 };
 
+export const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+});
+
 export default function DashboardCard({ title, amount, type }: DashboardCardProps) {
     const getStyles = () => {
         switch (type) {
@@ -21,7 +27,7 @@ export default function DashboardCard({ title, amount, type }: DashboardCardProp
         <div className={`rounded-2xl border p-6 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-105 ${getStyles()}`}>
             <h2 className="text-sm opacity-70 mb-2">{title}</h2>
             <p className="text-3xl font-bold tracking-wide">
-                ₹ {amount.toLocaleString()}
+                {formatter.format(amount)}
             </p>
         </div>
     );

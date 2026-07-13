@@ -38,15 +38,15 @@ export default function BudgetPage() {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center gap-6 mt-10 animate-pulse">
+            <div className="flex flex-col items-center gap-6 mt-10 animate-pulse w-full">
                 <div className="h-10 w-64 bg-card rounded-xl border border-border" />
-                <div className="grid md:grid-cols-3 gap-6 w-3/4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-11/12 md:w-3/4">
                     <div className="h-28 bg-card rounded-xl border border-border" />
                     <div className="h-28 bg-card rounded-xl border border-border" />
                     <div className="h-28 bg-card rounded-xl border border-border" />
                 </div>
-                <div className="grid grid-cols-3 gap-6 w-3/4">
-                    <div className="col-span-2 h-96 bg-card rounded-xl border border-border" />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-11/12 md:w-3/4">
+                    <div className="md:col-span-2 h-96 bg-card rounded-xl border border-border" />
                     <div className="h-96 bg-card rounded-xl border border-border" />
                 </div>
             </div>
@@ -54,16 +54,16 @@ export default function BudgetPage() {
     }
 
     return (
-        <main className="w-full">
+        <main className="w-full px-4 md:px-0">
             <div className="flex flex-col items-center justify-center mb-10">
-                <h1 className="text-[3rem] font-bold mb-3 mt-5">Budget Overview</h1>
-                <div className="grid md:grid-cols-3 gap-6 mt-6 w-3/4">
+                <h1 className="text-4xl md:text-[3rem] font-bold mb-3 mt-5 text-center">Budget Overview</h1>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 w-11/12 md:w-3/4">
+                    <SummaryCard title="Total Budget" amount={totalBudget} type="income" />
                     <SummaryCard title="Total Expenses" amount={totalExpenses} type="expense" />
                     <SummaryCard title="Remaining" amount={totalBudget - totalExpenses} type="balance" />
-                    <SummaryCard title="Total Budget" amount={totalBudget} type="income" />
                 </div>
                 {budgetsError ? (
-                    <div className="mt-8 w-3/4 rounded-lg border border-border bg-card p-10 text-center">
+                    <div className="mt-8 w-11/12 md:w-3/4 rounded-lg border border-border bg-card p-6 md:p-10 text-center">
                         <p className="font-semibold text-textColor">Couldn't load your budgets</p>
                         <p className="text-sm text-muted-textColor mt-1">{budgetsError}</p>
                         <button
@@ -73,12 +73,16 @@ export default function BudgetPage() {
                             Try again
                         </button>
                     </div>
+                ) : mappedBudgets.length === 0 ? (
+                    <div className="mt-8 w-full flex justify-center">
+                        <CreateBudgetForm onSuccess={fetchBudgets} />
+                    </div>
                 ) : (
-                    <div className="mt-8 w-3/4 grid grid-cols-3 gap-6 mt-10">
-                        <div className="col-span-2">
+                    <div className="mt-8 w-11/12 md:w-3/4 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="md:col-span-2">
                             <CategoryBudgetList budgets={mappedBudgets} />
                         </div>
-                        <div className="flex flex-col items-center gap-4 col-span-1">
+                        <div className="flex flex-col items-center gap-4 md:col-span-1">
                             <DonutChart budgets={mappedBudgets} />
                             <CreateBudgetForm onSuccess={fetchBudgets} />
                         </div>

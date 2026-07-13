@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import { CreateBudgetSchema } from "@/lib/schemas/Budget";
-
+import { Prisma } from "@/generated/prisma/client";
 export async function GET(req: NextRequest) {
   try {
     const { userId } = await auth();
@@ -34,6 +34,12 @@ export async function POST(req: NextRequest) {
     });
     return NextResponse.json(budget, { status: 200 });
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2003") {
+      return NextResponse.json(
+        { error: "PROFILE_REQUIRED", message: "Please complete your profile before adding transactions." },
+        { status: 409 },
+      );
+    }
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
