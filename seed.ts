@@ -68,7 +68,6 @@ async function main() {
         ],
     });
     console.log("✅ Savings seeded (₹12,000 total toward Emergency Fund)");
-
     console.log("\n🎉 All seed data inserted successfully.");
 }
 
